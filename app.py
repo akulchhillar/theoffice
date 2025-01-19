@@ -1,7 +1,5 @@
 import streamlit as st
 from phi.agent import Agent
-from phi.tools.wikipedia import WikipediaTools
-from phi.tools.duckduckgo import DuckDuckGo
 from phi.tools.newspaper_tools import NewspaperTools
 from phi.model.groq import Groq
 from dotenv import load_dotenv
