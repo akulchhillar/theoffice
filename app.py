@@ -4,6 +4,15 @@ from phi.tools.newspaper_tools import NewspaperTools
 from phi.model.groq import Groq
 
 
+characters = {"Michael_Scott":["Scrape the url https://theoffice.fandom.com/wiki/Michael_Scott and https://en.wikipedia.org/wiki/Michael_Scott_(The_Office)",
+"MS.jpg"],
+"Jim Halpert":["Scrape the url https://theoffice.fandom.com/wiki/Jim_Halpert and https://en.wikipedia.org/wiki/Jim_Halpert","JH.jpg"],
+"Pam Beesly":["Scrape the url https://theoffice.fandom.com/wiki/Pam_Beesly and https://en.wikipedia.org/wiki/Pam_Beesly","PB.jpg"],
+"Dwight Schrute":["Scrape the url https://theoffice.fandom.com/wiki/Dwight_Schrute and https://en.wikipedia.org/wiki/Dwight_Schrute","DS.jpg"],
+"Toby Flenderson":["Scrape the url https://theoffice.fandom.com/wiki/Toby_Flenderson","TF.jpg"],
+"Angela Martin":["Scrape the url https://theoffice.fandom.com/wiki/Angela_Martin and https://en.wikipedia.org/wiki/Angela_Martin","AM.jpg"],
+"Andy Bernard":["Scrape the url https://theoffice.fandom.com/wiki/Andy_Bernard and https://en.wikipedia.org/wiki/Andy_Bernard","AB.jpg"],
+"Kevin Malone":["Scrape the url https://theoffice.fandom.com/wiki/Kevin_Malone and https://en.wikipedia.org/wiki/Kevin_Malone","KM.jpg"]}
 
 
 if "user_messages" not in st.session_state:
@@ -24,8 +33,8 @@ if "selected_char" not in st.session_state:
 
 def get_response(query):
     agent = Agent(model=Groq(id="llama-3.3-70b-versatile"),tools=[NewspaperTools()], show_tool_calls=True,
-    description="You are going to act as 'Michael_Scott' from the series 'The Office' and you are going to answer all the questions asked by the user. You will answer as if you are him.",
-    instructions=["Scrape the url https://theoffice.fandom.com/wiki/Michael_Scott and https://en.wikipedia.org/wiki/Michael_Scott_(The_Office)#Character_details,_arc,_backstory using 'NewspaperTools' from the tool kit and use the content to understand and think like 'Michael Scott'.",
+    description="You are going to act as 'Michael Scott' from the series 'The Office' and you are going to answer all the questions asked by the user. You will answer as if you are him.",
+    instructions=[f"{characters[option][0]} using 'NewspaperTools' from the tool kit and use the content to understand and think like 'Michael Scott'.",
     "Answer the user's questions using the content from the url."])
     response = agent.run(query)
 
@@ -37,12 +46,12 @@ def append_data():
     prompt_value = st.session_state.prompt_value
     
     st.session_state['user_messages'].append(prompt_value)
-    st.session_state['bot_messages'].append(get_response(prompt_value))
+    st.session_state['bot_messages'].append(prompt_value)
     st.session_state['count_messages'] = st.session_state['count_messages'] + 1
 
     for msg in range(0,st.session_state['count_messages']):
-        messages.chat_message("user",avatar=f"https://api.dicebear.com/9.x/thumbs/svg?seed={option}&backgroundColor=0a5b83,1c799f,69d2e7,f1f4dc,f88c49,b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf,transparent&backgroundType=gradientLinear").write(st.session_state['user_messages'][msg])
-        messages.chat_message("assistant",avatar="MS.jpg").write(st.session_state['bot_messages'][msg])
+        messages.chat_message("user",avatar="user.png").write(st.session_state['user_messages'][msg])
+        messages.chat_message("assistant",avatar=characters[option][1]).write(st.session_state['bot_messages'][msg])
    
 
 st.title("That's What She Said: :blue[The Office] AI Chatbot. :sunglasses:")
@@ -55,8 +64,7 @@ with st.expander("See explanation"):
 
 option = st.selectbox(
     label="Select a character to begin.",
-    options=("Michael Scott", "Jim Halpert", "Pam Beesly","Angela Martin",
-             "Kevin Malone","Phyllis Lapin","Darryl Philbin","Andy Bernard"),
+    options=list(characters.keys()),
     index=None,
     placeholder="Select a character to begin.",
     label_visibility="hidden"
@@ -79,7 +87,6 @@ if option:
     prompt = st.chat_input("Say something",on_submit=append_data,key="prompt_value")
     
     messages = st.container(border=True,height=300)
-
 
 
 
