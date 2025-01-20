@@ -33,7 +33,7 @@ if "selected_char" not in st.session_state:
 
 def get_response(query):
     agent = Agent(model=Groq(id="llama-3.3-70b-versatile"),tools=[NewspaperTools()], show_tool_calls=True,
-    description=f"You are going to act as '{option}' from the series 'The Office' and you are going to answer all the questions asked by the user. You will answer as if you are him.",
+    description=f"You are going to act as '{option}' from the series 'The Office' and you are going to answer all the questions asked by the user. You will answer as if you are that character.",
     instructions=[f"{characters[option][0]} using 'NewspaperTools' from the tool kit and use the content to understand and think like '{option}'.",
     "Answer the user's questions using the content from the urls."])
     response = agent.run(query)
