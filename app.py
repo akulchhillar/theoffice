@@ -46,7 +46,7 @@ def append_data():
     prompt_value = st.session_state.prompt_value
     
     st.session_state['user_messages'].append(prompt_value)
-    st.session_state['bot_messages'].append(prompt_value)
+    st.session_state['bot_messages'].append(get_response(prompt_value))
     st.session_state['count_messages'] = st.session_state['count_messages'] + 1
 
     for msg in range(0,st.session_state['count_messages']):
